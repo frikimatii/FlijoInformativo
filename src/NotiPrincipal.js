@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Card from "react-bootstrap/Card";
-import Container from "react-bootstrap/esm/Container";
+import Container from "react-bootstrap/Container";
 
 export function NoticiaPrincipal() {
   const [noticiaPrincipal, setNoticiaPrincipal] = useState(null);
@@ -17,7 +17,7 @@ export function NoticiaPrincipal() {
           setNoticiaPrincipal(datos.results[0]);
         }
       } catch (error) {
-        console.log(error);
+        console.error("Error al cargar noticias:", error);
       }
     };
     cargarNoticias();
@@ -30,19 +30,23 @@ export function NoticiaPrincipal() {
   };
 
   return (
-    <>
+    <Container fluid className="d-flex justify-content-center" style={{ height: "70vh" }}>
       {noticiaPrincipal && (
-        <Container fluid>
-        <Card className="bg-dark text-white m-2">
-          <Card.Img src={noticiaPrincipal.image_url} alt="Fluido_Informatico" />
-          <Card.Body>
-            <Card.Title>{noticiaPrincipal.title}</Card.Title>
-            <Card.Text>{noticiaPrincipal.description}</Card.Text>
-            <Card.Text>{obtenerFecha(noticiaPrincipal.pubDate)}</Card.Text>
-          </Card.Body>
-        </Card>
-      </Container>
+        <a href={noticiaPrincipal.link} target={noticiaPrincipal.link} rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Card className="bg-dark text-white ">
+            <Card.Img 
+              src={noticiaPrincipal.image_url ? noticiaPrincipal.image_url : noticiaPrincipal.source_icon} 
+              alt={noticiaPrincipal.title} 
+              style={{ objectFit: 'cover', maxHeight: '500px' }} 
+            />
+            <Card.Body>
+              <Card.Title className="text-center mb-3">{noticiaPrincipal.title}</Card.Title>
+              <Card.Text>{noticiaPrincipal.description}</Card.Text>
+              <Card.Text className="text-end text-muted">{obtenerFecha(noticiaPrincipal.pubDate)}</Card.Text>
+            </Card.Body>
+          </Card>
+        </a>
       )}
-    </>
+    </Container>
   );
 }

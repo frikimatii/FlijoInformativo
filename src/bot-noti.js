@@ -1,70 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { TwitterApi } from "twitter-api-v2";
+import React, { useState, useEffect } from 'react';
+import Card from "react-bootstrap/Card";
+import Container from "react-bootstrap/esm/Container";
 
-const client = new TwitterApi({
-    appKey: "cYtq9nQZ85ZTi1QrS7QntuMpm",
-    appSecret: "AguoXuUy0W2oBvkZrm7wfxVj1j7PZ8PhM4vLkwXw5BmjkQGRBc",
-    accessToken: "1780001616545935360-BarSu2mNMWTx9mAy2bicBakiFtNyjD",
-    accessSecret: "9y3GloaKg8EkRLEaClgU77RefbhUSAn0eJVa1j9nxEtdf",
-    bearerToken: "AAAAAAAAAAAAAAAAAAAAAKhatQEAAAAAYIjuMjxGsIV2KKnlvVM8XZ8coBo%3D5EMm0SvZg4k5blaFYefyDJoVnoSTyqbQ6PhZg0ifqHGEUGcnA1",
-});
+export function NoticiaPrincipal() {
+  const [noticiaPrincipal, setNoticiaPrincipal] = useState(null);
 
-export const TweetConNoticia = () => {
-    const [noticia, setNoticia] = useState(null);
+  useEffect(() => {
+    const cargarNoticias = async () => {
+      try {
+        const url =
+          "https://newsdata.io/api/1/news?apikey=pub_4197125ab61a1e17b360239b79233dc4aa0bc&q=noticias&country=ar&language=es";
+        const respuesta = await fetch(url);
+        const datos = await respuesta.json();
+        if (Array.isArray(datos.results) && datos.results.length > 0) {
+          // Establecer la primera noticia como noticia principal
+          setNoticiaPrincipal(datos.results[0]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    cargarNoticias();
+  }, []);
 
-    useEffect(() => {
-        const obtenerYMostrarNoticia = async () => {
-            try {
-                const apiUrl = 'https://newsdata.io/api/1/news';
-                const params = {
-                    apikey: 'pub_422224e378f27631462c468a88bcbba60c83f',
-                    country: 'ar',
-                    language: 'es',
-                };
-                const response = await axios.get(apiUrl, { params });
-                if (response.status === 200) {
-                    const primeraNoticia = response.data.results[0];
-                    setNoticia(primeraNoticia);
-                } else {
-                    throw new Error('Error al obtener la noticia');
-                }
-            } catch (error) {
-                console.error("Error al obtener la noticia: ", error.message);
-            }
-        };
+  const obtenerFecha = (fechaCompleta) => {
+    // Cortar la cadena para obtener solo la fecha
+    const fecha = fechaCompleta.substring(0, 10); // Corta desde el índice 7 al 16
+    return fecha;
+  };
 
-        obtenerYMostrarNoticia();
-    }, []);
-
-    useEffect(() => {
-        const publicarTweetConNoticia = async () => {
-            try {
-                if (noticia) {
-                    const tweet = `📰 ${noticia.title}\n\n${noticia.link}\n\nPor: ${noticia.source_id}`;
-                    await client.v2.tweet(tweet);
-                    console.log("Tweet con la noticia publicado con éxito.");
-                }
-            } catch (error) {
-                console.error("Error al publicar el tweet con la noticia: ", error.message);
-            }
-        };
-
-        const intervalId = setInterval(publicarTweetConNoticia, 2 * 60 * 1000); // 2 minutos en milisegundos
-
-        return () => clearInterval(intervalId);
-    }, [noticia]);
-
-    return (
-        <div>
-            {noticia && (
-                <div>
-                    <h2>{noticia.title}</h2>
-                    <p>{noticia.link}</p>
-                    <p>Por: {noticia.source_id}</p>
-                </div>
-            )}
-        </div>
-    );
-};
-
+  return (
+    <>
+      {noticiaPrincipal && (
+        <Container fluid>
+          <Card className="bg-dark text-white m-2">
+            {/* Utiliza un operador ternario para verificar si la imagen es nula */}
+            <Card.Img src={noticiaPrincipal.image_url ? noticiaPrincipal.image_url : noticiaPrincipal.source_icon} alt="Fluido_Informatico" />
+            <Card.Body>
+              <Card.Title>{noticiaPrincipal.title}</Card.Title>
+              <Card.Text>{noticiaPrincipal.description}</Card.Text>
+              <Card.Text>{obtenerFecha(noticiaPrincipal.pubDate)}</Card.Text>
+            </Card.Body>
+          </Card>
+        </Container>
+      )}
+    </>
+  );
+}

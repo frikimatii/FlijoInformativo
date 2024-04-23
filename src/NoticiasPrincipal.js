@@ -1,25 +1,21 @@
+import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { NoticiaPrincipal } from './NotiPrincipal';
-import { NotiSecundaria } from './NotiSecundarria';
-
+import { NoticiaPrincipal } from './NotiPrincipal.js';
+import { NotiSecundaria } from './NotiSecundarria.js';
 
 export function ResponsiveExample() {
-
-
-
   return (
-<Container fluid>
-  <Row>
-    <Col xs={12} md={12} lg={6}>
-      <NoticiaPrincipal/>
-    </Col>
-    <Col xs={10} md={8} lg={6} className='justify-content-center'> 
-      <NotiSecundaria/>
-
-    </Col>
-  </Row>
-</Container>
+    <Container fluid className='mt-5'>
+      <Row>
+        <Col xs={12} lg={6}>
+          <NoticiaPrincipal />
+        </Col>
+        <Col xs={12} lg={6}>
+          <NotiSecundaria />
+        </Col>
+      </Row>
+    </Container>
   );
 }

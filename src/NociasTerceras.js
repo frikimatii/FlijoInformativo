@@ -26,30 +26,37 @@ export function NoticiaTerceras() {
 
   const obtenerFecha = (fechaCompleta) => {
     // Cortar la cadena para obtener solo la fecha
-    const fecha = fechaCompleta.substring(0, 10); // Corta desde el índice 7 al 16
+    const fecha = fechaCompleta.substring(0, 10); // Corta desde el índice 0 al 10
     return fecha;
   };
 
   return (
     <CardGroup className="m-4">
       {Array.isArray(noticias) && noticias.slice(6, 10).map((noticia, index) => (
-        <Card key={index} className="h-100">
-          {noticia.image_url &&
-            <Card.Img variant="top" src={noticia.image_url} className="card-img-top" />
-          }
-          <Card.Body className="d-flex flex-column">
+        <Card key={index} className="mb-3">
+          <a href={noticia.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', color: 'inherit' }}>
+            {(noticia.image_url || noticia.source_icon) &&
+              <Card.Img 
+                variant="top" 
+                src={noticia.image_url ? noticia.image_url : noticia.source_icon} 
+                className="card-img-top" 
+                style={{ objectFit: 'cover', maxHeight: '200px' }} // Ajusta el tamaño de la imagen
+              />
+            }
+          </a>
+          <Card.Body>
             {noticia.title &&
               <Card.Title>{noticia.title}</Card.Title>
             }
             {noticia.source_name &&
-              <Card.Text className="text-muted flex-grow-1">{noticia.source_name}</Card.Text>
-            }
-            {noticia.pubDate &&
-              <Card.Footer>
-                <small className="text-muted">{obtenerFecha(noticia.pubDate)}</small>
-              </Card.Footer>
+              <Card.Text className="text-muted mb-2">{noticia.source_name}</Card.Text>
             }
           </Card.Body>
+          {noticia.pubDate &&
+            <Card.Footer className='text-center'>
+              <small className="text-muted">{obtenerFecha(noticia.pubDate)}</small>
+            </Card.Footer>
+          }
         </Card>
       ))}
     </CardGroup>
