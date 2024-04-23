@@ -54,7 +54,7 @@ function TemperaturaActual() {
 
 export function NavScrollExample() {
   return (
-    <Navbar expand="lg" className="bg-body-tertiary bg-nav">
+    <Navbar expand="lg" className="bg-body-tertiary bg-nav ">
       <Container fluid className="d-flex flex-column align-items-center">
         <Navbar.Brand href="#" className="text-center mt-3">
           <img
