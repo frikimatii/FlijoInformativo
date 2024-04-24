@@ -26,7 +26,7 @@ export function NoticiaTerceras() {
 
   const obtenerFecha = (fechaCompleta) => {
     // Cortar la cadena para obtener solo la fecha
-    const fecha = fechaCompleta.substring(0, 10); // Corta desde el índice 0 al 10
+    const fecha = fechaCompleta.substring(); // Corta desde el índice 0 al 10
     return fecha;
   };
 
